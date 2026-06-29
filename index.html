@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ MONITE ADMIN - Cyber Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- ===== PARTICLES BACKGROUND ===== -->
+    <div id="particles"></div>
+
+    <!-- ===== NEON GRID ===== -->
+    <div class="grid-overlay"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-robot"></i>
+                    <span class="logo-pulse"></span>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-main">MONITE</span>
+                    <span class="logo-sub">CYBER ADMIN v3.0</span>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active" data-section="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" data-section="keys">
+                    <i class="fas fa-key"></i>
+                    <span>Keys</span>
+                </a>
+                <a href="#" data-section="offsets">
+                    <i class="fas fa-code"></i>
+                    <span>Offsets</span>
+                </a>
+                <a href="#" data-section="logs">
+                    <i class="fas fa-history"></i>
+                    <span>Logs</span>
+                </a>
+                <a href="#" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+            <div class="nav-status">
+                <span class="status-dot"></span>
+                <span class="status-text">Online</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container main-content">
+
+        <!-- ===== DASHBOARD SECTION ===== -->
+        <div id="dashboardSection" class="section active">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="totalKeys">0</div>
+                        <div class="stat-label">Total Keys</div>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 12%
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon active">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="activeKeys">0</div>
+                        <div class="stat-label">Active Keys</div>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 8%
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="expiringSoon">0</div>
+                        <div class="stat-label">Expiring Soon</div>
+                    </div>
+                    <div class="stat-trend down">
+                        <i class="fas fa-arrow-down"></i> 3%
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="totalUsage">0</div>
+                        <div class="stat-label">Total Usage</div>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 24%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-line"></i> Key Activity</h3>
+                        <span class="chart-badge">Last 7 days</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-pie-chart"></i> Key Distribution</h3>
+                        <span class="chart-badge">By Plan</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-card">
+                <div class="recent-header">
+                    <h3><i class="fas fa-bolt"></i> Recent Activity</h3>
+                    <button class="btn-mini" onclick="loadLogs()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+                <div class="recent-list" id="recentList">
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-key"></i></div>
+                        <div class="activity-content">
+                            <div class="activity-text">Loading activity...</div>
+                            <div class="activity-time">—</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== KEYS SECTION ===== -->
+        <div id="keysSection" class="section">
+            <div class="section-header">
+                <div class="header-left">
+                    <h2><i class="fas fa-key"></i> Key Management</h2>
+                    <span class="header-sub">Manage your access keys</span>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" onclick="openCreateKeyModal()">
+                        <i class="fas fa-plus"></i> Create Key
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="keysTable">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Expires</th>
+                            <th>Used By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="keysTableBody">
+                        <tr><td colspan="7" class="loading"><div class="loader"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== OFFSETS SECTION ===== -->
+        <div id="offsetsSection" class="section">
+            <div class="section-header">
+                <div class="header-left">
+                    <h2><i class="fas fa-code"></i> Offsets Manager</h2>
+                    <span class="header-sub">Game memory offsets configuration</span>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-success" onclick="openEditOffsetsModal()">
+                        <i class="fas fa-edit"></i> Edit Offsets
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="offsetsTable">
+                    <thead>
+                        <tr>
+                            <th>Offset Name</th>
+                            <th>Value</th>
+                            <th>Version</th>
+                        </tr>
+                    </thead>
+                    <tbody id="offsetsTableBody">
+                        <tr><td colspan="3" class="loading"><div class="loader"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== LOGS SECTION ===== -->
+        <div id="logsSection" class="section">
+            <div class="section-header">
+                <div class="header-left">
+                    <h2><i class="fas fa-history"></i> Activity Logs</h2>
+                    <span class="header-sub">All authentication attempts</span>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-danger" onclick="clearLogs()">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="logsTable">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>UDID</th>
+                            <th>Game</th>
+                            <th>Timestamp</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <tr><td colspan="5" class="loading"><div class="loader"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== SETTINGS SECTION ===== -->
+        <div id="settingsSection" class="section">
+            <div class="section-header">
+                <div class="header-left">
+                    <h2><i class="fas fa-cog"></i> System Settings</h2>
+                    <span class="header-sub">Configure your admin panel</span>
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <div class="settings-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="settings-content">
+                        <h3>Security</h3>
+                        <p>Change your admin API key for secure access</p>
+                        <div class="settings-input-group">
+                            <input type="password" id="newAdminKey" placeholder="Enter new admin key">
+                            <button class="btn btn-primary" onclick="changeAdminKey()">Update</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="settings-content">
+                        <h3>Default Duration</h3>
+                        <p>Set default expiration days for new keys</p>
+                        <div class="settings-input-group">
+                            <input type="number" id="defaultDuration" value="30" min="1" max="365">
+                            <button class="btn btn-primary" onclick="saveDefaultDuration()">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-icon"><i class="fas fa-database"></i></div>
+                    <div class="settings-content">
+                        <h3>Data Management</h3>
+                        <p>Export or import your data backups</p>
+                        <div class="settings-btn-group">
+                            <button class="btn btn-info" onclick="exportData()">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                            <button class="btn btn-warning" onclick="document.getElementById('importFile').click()">
+                                <i class="fas fa-upload"></i> Import
+                            </button>
+                            <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-icon"><i class="fas fa-robot"></i></div>
+                    <div class="settings-content">
+                        <h3>System Status</h3>
+                        <p>Monitor your API server health</p>
+                        <div class="status-grid">
+                            <div class="status-item">
+                                <span class="status-label">API</span>
+                                <span class="status-badge online">Online</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Database</span>
+                                <span class="status-badge online">Connected</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Keys</span>
+                                <span class="status-badge" id="statusKeys">0</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Uptime</span>
+                                <span class="status-badge" id="statusUptime">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CREATE KEY MODAL ===== -->
+    <div id="createKeyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-key"></i>
+                    <h2>Generate New Key</h2>
+                </div>
+                <span class="close" onclick="closeModal('createKeyModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Plan Type</label>
+                    <select id="keyPlan">
+                        <option value="daily">📅 Daily</option>
+                        <option value="weekly">📅 Weekly</option>
+                        <option value="monthly" selected>📅 Monthly</option>
+                        <option value="yearly">📅 Yearly</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Duration (days)</label>
+                    <input type="number" id="keyDuration" value="30" min="1" max="365">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Version Name</label>
+                    <input type="text" id="keyVersion" value="1.0.7-FFProduct">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('createKeyModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="createKey()">
+                    <i class="fas fa-plus"></i> Generate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== EDIT OFFSETS MODAL ===== -->
+    <div id="editOffsetsModal" class="modal modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-code"></i>
+                    <h2>Edit Offsets</h2>
+                </div>
+                <span class="close" onclick="closeModal('editOffsetsModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Version</label>
+                    <input type="text" id="offsetVersion" value="1.114.1">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-file-code"></i> Offsets (JSON)</label>
+                    <textarea id="offsetEditor" rows="20" spellcheck="false"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('editOffsetsModal')">Cancel</button>
+                <button class="btn btn-success" onclick="saveOffsets()">
+                    <i class="fas fa-save"></i> Save Offsets
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
